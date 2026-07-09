@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Kantumruy+Pro:wght@100..700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* 👈 បន្ថែមគូពណ៌ Cyber & Clean Gadget របស់អ្នកនៅត្រង់នេះ */
+  --color-primary: #111827;   /* Gray 900 (ខ្មៅគ្រើម) */
+  --color-accent: #8B5CF6;    /* Purple 500 (ស្វាយ Tech) */
+  --color-customBg: #F9FAFB;  /* Gray 50 */
+}
+
+body {
+  background-color: var(--color-customBg);
+  color: var(--color-primary);
+  font-family: "Poppins", "Kantumruy Pro", sans-serif;
+}
