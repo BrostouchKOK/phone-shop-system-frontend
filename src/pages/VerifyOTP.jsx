@@ -29,14 +29,21 @@ export default function VerifyOTP() {
 
       if (response.data.success) {
         toast.success("ផ្ទៀងផ្ទាត់ជោគជ័យ! សូមស្វាគមន៍មកកាន់ហាងយើងខ្ញុំ។");
+
+        // 1. រក្សាទុក Token
         localStorage.setItem("token", response.data.token);
-        await fetchCartFromServer(); // 👈 ហៅ Sync កន្ត្រកទំនិញពី Backend ត្រង់នេះ ទើបត្រឹមត្រូវ ១០០%
-        navigate("/");
+
+        //  ដំណោះស្រាយ៖ ត្រូវបន្ថែមជួរនេះដើម្បីរក្សាទុកទិន្នន័យ User (រួមទាំង role: "admin") ទៅក្នុង localStorage
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        // 2. Sync កន្ត្រកទំនិញ
+        await fetchCartFromServer();
+
+        // 3. សម្អាត Email បណ្តោះអាសន្ន
         localStorage.removeItem("temp_email");
 
-        setTimeout(() => {
-          navigate("/");
-        }, 1500);
+        // 4. រុញទៅទំព័រដើម
+        navigate("/");
       }
     } catch (err) {
       setLoading(false);

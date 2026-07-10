@@ -7,6 +7,8 @@ import Register from './pages/Register'
 import VerifyOTP from "./pages/VerifyOTP";
 import ProductDetails from './pages/ProductDetails'
 import Cart from './pages/Cart'
+import Profile from "./pages/Profile";
+import AdminOrders from "./pages/admin/AdminOrders";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
         </Routes>
       </div>
     </Router>

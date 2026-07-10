@@ -1,11 +1,17 @@
 import axiosClient from "./axiosClient";
 
-// បង្កើតការបញ្ជាទិញថ្មី (ទាមទារ Token ព្រោះត្រូវដឹងថាអ្នកណាជាអ្នកទិញ)
+// for admin and customer
 export const createOrder = (orderData) => {
-  const token = localStorage.getItem("token");
-  return axiosClient.post("/orders", orderData, {
-    headers: {
-      Authorization: `Bearer ${token}`, // បោះ Token ទៅឱ្យ Backend ឆែក
-    },
-  });
+  return axiosClient.post("/orders", orderData);
+};
+export const apiGetMyOrders = async () => {
+  return await axiosClient.get("/orders/myorders");
+};
+
+// for admin only
+export const apiAdminGetAllOrders = async () => {
+  return await axiosClient.get("/orders");
+};
+export const apiAdminUpdateOrderStatus = async (orderId, status) => {
+  return await axiosClient.put(`/orders/${orderId}/status`, { status });
 };
