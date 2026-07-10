@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// 👈 Import Icons ស្អាតៗមកប្រើប្រាស់
 import { FiShoppingCart, FiLogOut, FiLogIn, FiMenu, FiX } from "react-icons/fi";
+import { useCart } from "../context/CartContext"; // 👈 ១. Import useCart ចូលមក
 
 const Navbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [isOpen, setIsOpen] = useState(false);
+  const { totalItems } = useCart(); // 👈 ២. ទាញយក totalItems មកប្រើប្រាស់
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -22,7 +23,7 @@ const Navbar = () => {
             to="/"
             className="text-xl sm:text-2xl font-black text-primary tracking-tight"
           >
-            IT3<span className="text-accent">.TECH</span>
+            SEYHA<span className="text-accent">.TECH</span>
           </Link>
 
           {/* Desktop Menu */}
@@ -31,12 +32,20 @@ const Navbar = () => {
               ទំព័រដើម
             </Link>
 
-            {/* 🛒 ប្តូរមកប្រើ FiShoppingCart Icon */}
+            {/* 🛒 កន្ត្រកទំនិញ (Desktop) ថែម Badge លេខ */}
             <Link
               to="/cart"
-              className="flex items-center gap-1.5 hover:text-accent transition"
+              className="relative flex items-center gap-1.5 hover:text-accent transition py-2"
             >
-              <FiShoppingCart className="text-lg text-gray-600 hover:text-accent" />
+              <div className="relative flex items-center justify-center">
+                <FiShoppingCart className="text-xl text-gray-600 hover:text-accent" />
+                {/* 💡 បើមានទំនិញ > 0 ទើបបង្ហាញ Badge ពណ៌ស្វាយលោតត្រដែតខាងលើ */}
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-accent text-white text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-bounce">
+                    {totalItems}
+                  </span>
+                )}
+              </div>
               <span>កន្ត្រកទំនិញ</span>
             </Link>
 
@@ -57,8 +66,18 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button (FiMenu / FiX) */}
-          <div className="md:hidden">
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center gap-4">
+            {/* 🛒 កន្ត្រកទំនិញ (Mobile) បង្ហាញនៅខាងក្រៅម៉ឺនុយ ក្បែរប៊ូតុង Menu តែម្តងដើម្បីឱ្យ User ងាយមើលឃើញ */}
+            <Link to="/cart" className="relative p-2 text-primary">
+              <FiShoppingCart className="text-xl" />
+              {totalItems > 0 && (
+                <span className="absolute top-0 right-0 bg-accent text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-bounce">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
+
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-primary focus:outline-none text-xl cursor-pointer"
@@ -83,9 +102,16 @@ const Navbar = () => {
           <Link
             to="/cart"
             onClick={() => setIsOpen(false)}
-            className="flex items-center gap-2 py-2 hover:text-accent"
+            className="flex items-center justify-between py-2 hover:text-accent"
           >
-            <FiShoppingCart className="text-base" /> កន្ត្រកទំនិញ
+            <div className="flex items-center gap-2">
+              <FiShoppingCart className="text-base" /> កន្ត្រកទំនិញ
+            </div>
+            {totalItems > 0 && (
+              <span className="bg-accent text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                {totalItems} គ្រឿង
+              </span>
+            )}
           </Link>
 
           {token ? (

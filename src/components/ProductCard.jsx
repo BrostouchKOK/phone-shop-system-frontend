@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const imageUrl =
@@ -40,12 +41,12 @@ const ProductCard = ({ product }) => {
           </span>
         </div>
 
-        <button
-          disabled={product.stock === 0}
-          className="w-full mt-4 bg-primary text-white text-xs font-semibold py-2.5 px-3 rounded-xl transition duration-200 hover:bg-accent disabled:bg-gray-200 disabled:text-gray-400 cursor-pointer"
+        <Link
+          to={`/product/${product._id}`}
+          className="block text-center w-full mt-4 bg-primary text-white text-xs font-semibold py-2.5 px-3 rounded-xl transition duration-200 hover:bg-accent cursor-pointer"
         >
           មើលលម្អិត
-        </button>
+        </Link>
       </div>
     </div>
   );
