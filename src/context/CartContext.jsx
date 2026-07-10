@@ -1,65 +1,97 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { apiAddToCart, apiGetCart, apiRemoveFromCart } from "../api/cartApi";
+import { toast } from "react-hot-toast";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  // 💡 ទាញយកទិន្នន័យកន្ត្រកទំនិញចាស់ពី LocalStorage បើមាន
-  const [cartItems, setCartItems] = useState(() => {
-    const localData = localStorage.getItem("seyha_cart");
-    return localData ? JSON.parse(localData) : [];
-  });
+  const [cartItems, setCartItems] = useState([]);
+  const [loadingCart, setLoadingCart] = useState(false);
 
-  // រក្សាទុកក្នុង LocalStorage រាល់ពេលកន្ត្រកប្រែប្រួល
-  useEffect(() => {
-    localStorage.setItem("seyha_cart", JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  // ➕ មុខងារបន្ថែមទំនិញចូលកន្ត្រក
-  const addToCart = (product, quantity) => {
-    setCartItems((prevItems) => {
-      const exist = prevItems.find((item) => item._id === product._id);
-      if (exist) {
-        // បើមានទូរស័ព្ទនេះក្នុងកន្ត្រករួចហើយ ត្រូវបូកថែមចំនួន (តែមិនឱ្យលើសស្តុក)
-        return prevItems.map((item) =>
-          item._id === product._id
-            ? {
-                ...item,
-                quantity: Math.min(item.quantity + quantity, product.stock),
-              }
-            : item,
-        );
+  // 📥 អនុគមន៍ទាញយកទិន្នន័យពី Backend DB
+  const fetchCartFromServer = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setCartItems([]);
+      return;
+    }
+    try {
+      const response = await apiGetCart();
+      if (response.data.success) {
+        // ដោយសារ Backend ប្រើ .populate("items.product")
+        // ដូច្នេះយើងត្រូវរៀបចំទម្រង់ array ឱ្យស្រួលប្រើលើ Frontend
+        const formattedItems = response.data.data.items.map((item) => ({
+          _id: item.product._id,
+          name: item.product.name,
+          price: item.product.price,
+          images: item.product.images,
+          stock: item.product.stock,
+          brand: item.product.brand,
+          quantity: item.quantity,
+        }));
+        setCartItems(formattedItems);
       }
-      // បើមិនទាន់មានទេ បញ្ចូលគ្រឿងថ្មី
-      return [...prevItems, { ...product, quantity }];
-    });
+    } catch (err) {
+      console.error("មិនអាចទាញទិន្នន័យកន្ត្រកបានឡើយ");
+    }
   };
 
-  //  មុខងារកែប្រែចំនួន (ថែម/ថយ) ក្នុងទំព័រ Cart ចំៗ
-  const updateQuantity = (id, amount) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item._id === id
-          ? {
-              ...item,
-              quantity: Math.max(
-                1,
-                Math.min(item.quantity + amount, item.stock),
-              ),
-            }
-          : item,
-      ),
-    );
+  // ទាញទិន្នន័យពេលដំបូងបង្អស់
+  useEffect(() => {
+    fetchCartFromServer();
+  }, []);
+
+  // ➕ មុខងារបន្ថែមទំនិញ (Add/Update) ទៅ Backend
+  const addToCart = async (product, quantity) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("សូមចូលប្រើប្រាស់គណនីរបស់អ្នកសិន!");
+      return false;
+    }
+
+    try {
+      const response = await apiAddToCart(product._id, quantity);
+      if (response.data.success) {
+        await fetchCartFromServer(); // ទាញយកទិន្នន័យថ្មីចុងក្រោយពី Server
+        return true;
+      }
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || "មានបញ្ហាក្នុងការដាក់ចូលកន្ត្រក!",
+      );
+      return false;
+    }
   };
 
-  //  មុខងារលុបទំនិញមួយចេញពីកន្ត្រក
-  const removeFromCart = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item._id !== id));
+  // 🔄 មុខងារកែប្រែចំនួន (ថែម/ថយ) ក្នុងទំព័រ Cart
+  const updateQuantity = async (id, amount) => {
+    // ដោយសារ Backend API /cart របស់លោកអ្នកប្រើប្រាស់វិធីបូកថែម (+= quantity)
+    // ដូច្នេះយើងគ្រាន់តែបាញ់លេខ amount (1 ឬ -1) ទៅកាន់ API ចំៗជាការស្រេច
+    try {
+      const response = await apiAddToCart(id, amount);
+      if (response.data.success) {
+        await fetchCartFromServer();
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "មិនអាចកែប្រែចំនួនបានទេ!");
+    }
   };
 
-  //  មុខងារលុបសម្អាតកន្ត្រកទាំងមូល (ពេល Checkout រួច)
+  // ❌ មុខងារលុបទំនិញមួយចេញពីកន្ត្រក
+  const removeFromCart = async (id) => {
+    try {
+      const response = await apiRemoveFromCart(id);
+      if (response.data.success) {
+        toast.success("បានលុបទំនិញចេញពីកន្ត្រករួចរាល់!");
+        await fetchCartFromServer();
+      }
+    } catch (err) {
+      toast.error("មិនអាចលុបទំនិញនេះបានឡើយ!");
+    }
+  };
+
   const clearCart = () => setCartItems([]);
 
-  //  គណនាចំនួនមុខទំនិញសរុបសម្រាប់បង្ហាញលើ badge ម៉ឺនុយ
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -71,6 +103,7 @@ export const CartProvider = ({ children }) => {
         removeFromCart,
         clearCart,
         totalItems,
+        fetchCartFromServer,
       }}
     >
       {children}

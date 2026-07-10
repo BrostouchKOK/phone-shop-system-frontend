@@ -31,11 +31,30 @@ const ProductDetails = () => {
     fetchDetails();
   }, [id, navigate]);
 
-  const handleAddToCart = () => {
-    addToCart(product, quantity);
-    toast.success(
-      `បានបន្ថែម ${product.name} ចំនួន ${quantity} គ្រឿងទៅក្នុងកន្ត្រកទំនិញ!`,
-    );
+  // កែសម្រួលត្រង់ផ្នែក handleAddToCart ក្នុងឯកសារ src/pages/ProductDetails.jsx
+
+  const handleAddToCart = async () => {
+    // ពិនិត្យមើលថាតើមាន Token នៅក្នុង LocalStorage ដែរឬទេ?
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      //  បង្ហាញសារជូនដំណឹងទៅកាន់ User ភ្លាមៗ
+      toast.error(
+        "សូមចូលប្រើប្រាស់គណនីរបស់អ្នកសិន ដើម្បីបន្ថែមទំនិញចូលកន្ត្រក!",
+      );
+
+      // រុញអតិថិជនទៅកាន់ទំព័រ Login ស្វ័យប្រវត្តិ
+      navigate("/login");
+      return; // ឃាត់មិនឱ្យកូដខាងក្រោមដំណើរការទៅមុខទៀត
+    }
+
+    // បើមាន Token រួចរាល់ ទើបអនុញ្ញាតឱ្យហៅ API ទៅកាន់ Backend
+    const success = await addToCart(product, quantity);
+    if (success) {
+      toast.success(
+        `🎉 បានបន្ថែម ${product.name} ចំនួន ${quantity} គ្រឿងទៅក្នុងកន្ត្រកទំនិញ!`,
+      );
+    }
   };
 
   if (loading) {

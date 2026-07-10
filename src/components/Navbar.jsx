@@ -23,7 +23,7 @@ const Navbar = () => {
             to="/"
             className="text-xl sm:text-2xl font-black text-primary tracking-tight"
           >
-            SEYHA<span className="text-accent">.TECH</span>
+            IT3<span className="text-accent">.TECH</span>
           </Link>
 
           {/* Desktop Menu */}

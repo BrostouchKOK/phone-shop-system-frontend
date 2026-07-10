@@ -21,7 +21,7 @@ export default function Login() {
       success: (res) => {
         localStorage.setItem("temp_email", email);
         navigate("/verify-otp");
-        return "លេខកូដ OTP ត្រូវបានផ្ញើទៅ Email រួចរាល់! 🚀";
+        return "លេខកូដ OTP ត្រូវបានផ្ញើទៅ Email រួចរាល់!";
       },
       error: (err) => {
         setLoading(false);
@@ -44,7 +44,7 @@ export default function Login() {
   return (
     // 📱 Responsive Container: ហូតពង្រីកពេញអេក្រង់ និងដកឃ្លាខ្លះៗលើ Mobile (p-4)
     <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-10">
-      {/* 🛠️ Card Responsive: លាតពេញលើទូរស័ព្ទ (w-full) តែរួមតូចត្រឹមល្មមលើ Laptop/Desktop (sm:max-w-md) */}
+      {/*  Card Responsive: លាតពេញលើទូរស័ព្ទ (w-full) តែរួមតូចត្រឹមល្មមលើ Laptop/Desktop (sm:max-w-md) */}
       <div className="bg-white p-6 sm:p-8 md:p-10 rounded-2xl shadow-xl shadow-purple-100/40 border border-gray-100 w-full sm:max-w-md transition-all duration-300">
         <div className="text-center mb-6 sm:mb-8">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight">

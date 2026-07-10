@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast"; // 👈 ថែម Toast
 import { verifyOtp } from "../api/authApi";
+import { useCart } from "../context/CartContext";
 
 export default function VerifyOTP() {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const { fetchCartFromServer } = useCart();
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("temp_email");
@@ -28,6 +30,8 @@ export default function VerifyOTP() {
       if (response.data.success) {
         toast.success("ផ្ទៀងផ្ទាត់ជោគជ័យ! សូមស្វាគមន៍មកកាន់ហាងយើងខ្ញុំ។");
         localStorage.setItem("token", response.data.token);
+        await fetchCartFromServer(); // 👈 ហៅ Sync កន្ត្រកទំនិញពី Backend ត្រង់នេះ ទើបត្រឹមត្រូវ ១០០%
+        navigate("/");
         localStorage.removeItem("temp_email");
 
         setTimeout(() => {
