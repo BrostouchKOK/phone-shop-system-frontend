@@ -1,8 +1,14 @@
 import axiosClient from "./axiosClient";
 
-// ទាញយកបញ្ជីផលិតផលទាំងអស់ (ព្រមទាំងគាំទ្រ Pagination, Search និង Filter)
 export const getAllProducts = (params) =>
   axiosClient.get("/products", { params });
-
-// ទាញយកព័ត៌មានលម្អិតរបស់ទូរស័ព្ទមួយគ្រឿង តាមរយៈ ID
 export const getProductDetails = (id) => axiosClient.get(`/products/${id}`);
+export const createProduct = (formData) =>
+  axiosClient.post("/products", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+export const deleteProduct = (id) => axiosClient.delete(`/products/${id}`);
+export const updateProduct = (id, formData) =>
+  axiosClient.put(`/products/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });

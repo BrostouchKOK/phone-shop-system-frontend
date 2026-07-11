@@ -9,6 +9,9 @@ import ProductDetails from './pages/ProductDetails'
 import Cart from './pages/Cart'
 import Profile from "./pages/Profile";
 import AdminOrders from "./pages/admin/AdminOrders";
+import AdminProducts from "./pages/admin/AdminProducts"; 
+import AdminUsers from "./pages/admin/AdminUsers";      
+import AdminDashboard from "./pages/admin/AdminDashboard"; 
 
 function App() {
   return (
@@ -26,6 +29,9 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/admin/products" element={<AdminProducts />} /> 
+        <Route path="/admin/users" element={<AdminUsers />} />       
+        <Route path="/admin/dashboard" element={<AdminDashboard />} /> 
         </Routes>
       </div>
     </Router>

@@ -174,7 +174,7 @@ const Navbar = () => {
                   className="flex items-center justify-center gap-1.5 w-full py-2.5 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold border border-rose-100"
                 >
                   <FiSettings className="text-sm" />
-                  ⚙️ គ្រប់គ្រងប្រព័ន្ធ (Admin)
+                  គ្រប់គ្រងប្រព័ន្ធ (Admin)
                 </Link>
               )}
 

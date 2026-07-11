@@ -17,7 +17,6 @@ const AdminSidebar = () => {
     { path: "/admin/products", name: "ផលិតផល", icon: <FiSmartphone /> },
     { path: "/admin/users", name: "សមាជិក", icon: <FiUsers /> },
     { path: "/admin/dashboard", name: "ចំណូល", icon: <FiTrendingUp /> },
-    { path: "/admin/dashboard", name: "ចំណូល", icon: <FiTrendingUp /> },
   ];
 
   return (
