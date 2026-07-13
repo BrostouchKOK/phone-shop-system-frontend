@@ -14,7 +14,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  // 🛠️ ដំណោះស្រាយ៖ ទាញយកទិន្នន័យ User ពី localStorage (បើគ្មានទេ ឱ្យវាទៅជា Object ទទេ)
+  // ទាញយកទិន្នន័យ User ពី localStorage
   const user = JSON.parse(localStorage.getItem("user")) || {};
 
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +22,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user"); // សម្អាតទិន្នន័យ user ចោលពេលចាកចេញ
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
@@ -46,7 +46,7 @@ const Navbar = () => {
               ទំព័រដើម
             </Link>
 
-            {/* 🛒 កន្ត្រកទំនិញ (Desktop) - បង្ហាញតែចំពោះ User ធម្មតាប៉ុណ្ណោះ */}
+            {/* 🛒 កន្ត្រកទំនិញ (Desktop) */}
             {user.role !== "admin" && (
               <Link
                 to="/cart"
@@ -66,10 +66,10 @@ const Navbar = () => {
 
             {token ? (
               <div className="flex items-center gap-4">
-                {/* 👑 ប៊ូតុងសម្រាប់ ADMIN (Desktop) */}
+                {/* 👑 ប៊ូតុងសម្រាប់ ADMIN (Desktop) -> លោតទៅទំព័រចំណូល */}
                 {user.role === "admin" && (
                   <Link
-                    to="/admin/orders"
+                    to="/admin/dashboard"
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold border border-rose-100 hover:bg-rose-600 hover:text-white transition duration-200 cursor-pointer animate-pulse"
                   >
                     <FiSettings
@@ -112,7 +112,6 @@ const Navbar = () => {
           {/* 📱 MOBILE MENU BUTTON                                     */}
           {/* ========================================================= */}
           <div className="md:hidden flex items-center gap-4">
-            {/* បង្ហាញកន្ត្រកទំនិញលើ Mobile តែករណីមិនមែនជា Admin ប៉ុណ្ណោះ */}
             {user.role !== "admin" && (
               <Link to="/cart" className="relative p-2 text-primary">
                 <FiShoppingCart className="text-xl" />
@@ -169,7 +168,7 @@ const Navbar = () => {
               {/* 👑 ប៊ូតុងសម្រាប់ ADMIN (Mobile) */}
               {user.role === "admin" && (
                 <Link
-                  to="/admin/orders"
+                  to="/admin/dashboard"
                   onClick={() => setIsOpen(false)}
                   className="flex items-center justify-center gap-1.5 w-full py-2.5 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold border border-rose-100"
                 >

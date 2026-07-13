@@ -16,6 +16,8 @@ export const apiAdminUpdateOrderStatus = async (orderId, status) => {
   return await axiosClient.put(`/orders/${orderId}/status`, { status });
 };
 
-export const apiGetDashboardStats = async () => {
-  return await axiosClient.get("/orders/dashboard-stats");
+export const apiGetDashboardStats = async (timeRange) => {
+  return await axiosClient.get("/orders/dashboard-stats", {
+    params: { timeRange },
+  });
 };
